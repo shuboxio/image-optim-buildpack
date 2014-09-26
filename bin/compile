@@ -66,7 +66,7 @@ echo "-----> Image-Optim binaries version"
 
 advpng -V | head -1 | indent
 
-gifsicle --version | head -1 | indent 
+gifsicle --version | head -1 | indent
 
 jpegoptim -V | head -1 | indent
 
@@ -74,7 +74,7 @@ jpegtran -V /dev/null 2>&1 | head -1 | indent
 
 optipng -V | head -1 | indent
 
-pngcrush -V | sed -n 2p | indent
+pngcrush -version 2>&1 | head -1 | indent
 
 cd $WORKING_DIR
 
