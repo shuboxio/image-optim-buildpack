@@ -28,6 +28,11 @@ else
   cp -v jpegoptim/jpegoptim-cedar14 ${BUILD_DIR}/${VENDOR_DIR}/jpegoptim | indent
 fi
 
+echo "-----> Download pngout"
+
+PNGOUT_URL="http://static.jonof.id.au/dl/kenutils/pngout-20150319-linux-static.tar.gz"
+curl -L --silent $PNGOUT_URL | tar xz
+cp -v ./pngout-20130221-linux-static/x86_64/pngout-static ${BUILD_DIR}/${VENDOR_DIR}/pngout | indent
 
 export PATH="$PATH:$HOME/vendor/image-optim"
 
