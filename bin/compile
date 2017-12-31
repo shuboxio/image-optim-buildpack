@@ -77,7 +77,10 @@ optipng -V | head -1 | indent
 
 pngcrush -version 2>&1 | head -1 | indent
 
-pngquant --version | head -1 | indent
+pngquant 2>&1 | head -1 | indent
+
+pngout 2>&1 | head -1 | indent
+
 
 cd $WORKING_DIR
 
