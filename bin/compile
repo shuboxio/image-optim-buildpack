@@ -7,6 +7,8 @@ BIN_DIR=$(cd $(dirname $0); pwd)
 ROOT_DIR=$(dirname $BIN_DIR)
 WORKING_DIR=$(pwd)
 VENDOR_DIR="vendor/image-optim"
+TMP_DIR="${BUILD_DIR}/tmp"
+GIFSICLE_VERSION=1.91
 
 indent() {
   sed -u 's/^/       /'
@@ -28,11 +30,31 @@ else
   cp -v jpegoptim/jpegoptim-cedar14 ${BUILD_DIR}/${VENDOR_DIR}/jpegoptim | indent
 fi
 
+echo "-----> Compiling gifsicle $GIFSICLE_VERSION"
+
+GIFSICLE_FILE=v$GIFSICLE_VERSION.tar.gz
+GIFSICLE_URL=https://github.com/kohler/gifsicle/archive/$GIFSICLE_FILE
+GIFSICLE_DIR=gifsicle-$GIFSICLE_VERSION
+
+mkdir -p $TMP_DIR
+
+cd $TMP_DIR
+
+curl -O -L -C - $GIFSICLE_URL
+
+tar -xzf $GIFSICLE_FILE
+
+cd $GIFSICLE_DIR
+
+autoreconf -i && ./configure && make
+
+mv ./src/gifsicle ${BUILD_DIR}/${VENDOR_DIR}/gifsicle
+
+echo "-----> Adding image-optim binaries symlink to make them available in next buildpacks"
+
 export PATH="$PATH:$HOME/vendor/image-optim"
 
 cd $WORKING_DIR
-
-echo "-----> Adding image-optim binaries symlink to make them available in next buildpacks"
 
 cd /tmp/codon/vendor/bin
 
