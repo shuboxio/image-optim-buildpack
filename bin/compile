@@ -50,9 +50,10 @@ autoreconf -i && ./configure && make
 
 mv ./src/gifsicle ${BUILD_DIR}/${VENDOR_DIR}/gifsicle
 
-echo "-----> Adding image-optim binaries symlink to make them available in next buildpacks"
+echo "-----> Adding image-optim and openjpeg binaries symlinks to make available to next buildpacks"
 
 export PATH="$PATH:$HOME/vendor/image-optim"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/vendor/image-optim"
 
 cd $WORKING_DIR
 
@@ -66,6 +67,15 @@ ln -s ${BUILD_DIR}/${VENDOR_DIR}/optipng optipng
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/pngcrush pngcrush
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/pngquant pngquant
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/pngout pngout
+
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/libopenjp2.so libopenjp2.so
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/libopenjp2.so.7 libopenjp2.so.7
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/libopenjp2.so.2.3.0 libopenjp2.so.2.3.0
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/libopenjp2.a libopenjp2.a
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/opj_compress opj_compress
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/opj_decompress opj_decompress
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/opj_dump opj_dump
+
 
 echo "-----> Adding image-optim binaries to PATH"
 
@@ -103,6 +113,6 @@ pngquant 2>&1 | head -1 | indent
 
 pngout 2>&1 | head -1 | indent
 
+opj_compress 2>&1 | head -1 | indent
 
 cd $WORKING_DIR
-
