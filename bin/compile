@@ -8,21 +8,24 @@ ROOT_DIR=$(dirname $BIN_DIR)
 WORKING_DIR=$(pwd)
 VENDOR_DIR="vendor/image-optim"
 TMP_DIR="${BUILD_DIR}/tmp"
-GIFSICLE_VERSION=1.91
 
 indent() {
   sed -u 's/^/       /'
 }
 
+mkdir -p ${BUILD_DIR}/${VENDOR_DIR}
+mkdir -p $TMP_DIR
+
+# *****************************************************************************
+
 echo "-----> Adding Item-Optim binaries"
 
 cd $ROOT_DIR/${VENDOR_DIR}
 
-mkdir -p ${BUILD_DIR}/${VENDOR_DIR}
-
 cp -v * ${BUILD_DIR}/${VENDOR_DIR} | indent
 
-dpkg -l |grep libjpeg62 > /dev/null
+dpkg -l | grep libjpeg62 > /dev/null
+
 if [ $? -eq 0 ]
 then
   cp -v jpegoptim/jpegoptim-cedar ${BUILD_DIR}/${VENDOR_DIR}/jpegoptim | indent
@@ -30,13 +33,36 @@ else
   cp -v jpegoptim/jpegoptim-cedar14 ${BUILD_DIR}/${VENDOR_DIR}/jpegoptim | indent
 fi
 
-echo "-----> Compiling gifsicle $GIFSICLE_VERSION"
+# *****************************************************************************
 
+WEBP_VERSION=1.0.0
+WEBP_FILE=libwebp-$WEBP_VERSION.tar.gz
+WEBP_URL=https://storage.googleapis.com/downloads.webmproject.org/releases/webp/$WEBP_FILE
+WEBP_DIR=libwebp-$WEBP_VERSION
+
+echo "-----> Compiling webp tools"
+
+cd $TMP_DIR
+
+curl -O -L -C - $WEBP_URL
+
+tar -xzf $WEBP_FILE
+
+cd $WEBP_DIR
+
+autoreconf -i && ./configure && make
+
+mv ./examples/cwebp ${BUILD_DIR}/${VENDOR_DIR}/cwebp
+mv ./examples/dwebp ${BUILD_DIR}/${VENDOR_DIR}/dwebp
+
+# *****************************************************************************
+
+GIFSICLE_VERSION=1.91
 GIFSICLE_FILE=v$GIFSICLE_VERSION.tar.gz
 GIFSICLE_URL=https://github.com/kohler/gifsicle/archive/$GIFSICLE_FILE
 GIFSICLE_DIR=gifsicle-$GIFSICLE_VERSION
 
-mkdir -p $TMP_DIR
+echo "-----> Compiling gifsicle $GIFSICLE_VERSION"
 
 cd $TMP_DIR
 
@@ -46,7 +72,7 @@ tar -xzf $GIFSICLE_FILE
 
 cd $GIFSICLE_DIR
 
-autoreconf -i && ./configure && make
+autoreconf -i && ./configure 2>&1 && make 2>&1
 
 mv ./src/gifsicle ${BUILD_DIR}/${VENDOR_DIR}/gifsicle
 
