@@ -63,6 +63,7 @@ ln -s ${BUILD_DIR}/${VENDOR_DIR}/cwebp cwebp
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/dwebp dwebp
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/advpng advpng
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/gifsicle gifsicle
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/jhead jhead
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/jpegoptim jpegoptim
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/jpegtran jpegtran
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/optipng optipng
@@ -102,6 +103,8 @@ echo "-----> Image-Optim binaries version"
 echo "cwebp version: `cwebp -version`" | head -1 | indent
 
 echo "dwebp version: `dwebp -version`" | head -1 | indent
+
+jhead -V | head -1 | indent
 
 advpng -V | head -1 | indent
 
