@@ -18,11 +18,11 @@ mkdir -p $TMP_DIR
 
 # *****************************************************************************
 
-echo "-----> Adding Item-Optim binaries"
+echo "-----> Adding ImageOptim binaries"
 
 cd $ROOT_DIR/${VENDOR_DIR}
 
-cp -v * ${BUILD_DIR}/${VENDOR_DIR} | indent
+cp -v * ${BUILD_DIR}/${VENDOR_DIR} 2>/dev/null | indent
 
 dpkg -l | grep libjpeg62 > /dev/null
 
@@ -52,8 +52,12 @@ cd $WEBP_DIR
 
 autoreconf -i && ./configure && make
 
+mkdir ${BUILD_DIR}/${VENDOR_DIR}/.libs
+
 mv ./examples/cwebp ${BUILD_DIR}/${VENDOR_DIR}/cwebp
 mv ./examples/dwebp ${BUILD_DIR}/${VENDOR_DIR}/dwebp
+mv ./examples/.libs/cwebp ${BUILD_DIR}/${VENDOR_DIR}/.libs/cwebp
+mv ./examples/.libs/dwebp ${BUILD_DIR}/${VENDOR_DIR}/.libs/dwebp
 
 # *****************************************************************************
 
@@ -76,6 +80,8 @@ autoreconf -i && ./configure 2>&1 && make 2>&1
 
 mv ./src/gifsicle ${BUILD_DIR}/${VENDOR_DIR}/gifsicle
 
+# *****************************************************************************
+
 echo "-----> Adding image-optim and openjpeg binaries symlinks to make available to next buildpacks"
 
 export PATH="$PATH:$HOME/vendor/image-optim"
@@ -85,8 +91,11 @@ cd $WORKING_DIR
 
 cd /tmp/codon/vendor/bin
 
+mkdir -p .libs
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/cwebp cwebp
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/dwebp dwebp
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/.libs/cwebp ./.libs/cwebp
+ln -s ${BUILD_DIR}/${VENDOR_DIR}/.libs/dwebp ./.libs/dwebp
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/advpng advpng
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/gifsicle gifsicle
 ln -s ${BUILD_DIR}/${VENDOR_DIR}/jhead jhead
